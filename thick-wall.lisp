@@ -21,13 +21,14 @@
       (setup
        :refine *ref*
        :mps mps
-       :sym t
-       )
+       :sym t)
+      (setf (cl-mpm/aggregate::sim-enable-aggregate *sim*) t)
+      (cl-mpm/setup::set-mass-filter *sim* 1d3 :proportion 1d-15)
       (format t "Running sim size ~a ~a ~%" *ref* mps)
       (cl-mpm/dynamic-relaxation::run-load-control
        *sim*
        :output-dir output-dir
-       :load-steps 1
+       :load-steps 10
        :substeps (* 20 *ref*)
        :plotter #'plot
        :damping 1d0
@@ -35,6 +36,6 @@
        :save-vtk-loadstep t
        :dt-scale 1d0
        :criteria 1d-9
-       :loading-function (lambda (f) (setf (nth 1 (cl-mpm/buoyancy::bc-pressure-pressures *bc-pressure*)) (* f -1d4))))
+       :loading-function #'loading-function)
       (save-csv (merge-pathnames (format nil "./data/data-~A_~D.csv" *ref* mps)))
       )))

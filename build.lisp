@@ -23,5 +23,6 @@
     :executable t
     :toplevel #'main
     :compression nil
-    :save-runtime-options t)
+    :save-runtime-options t
+    )
 (uiop:quit)
