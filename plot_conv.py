@@ -77,7 +77,7 @@ def plot_tri(offset,size):
 plot_tri([0.5,-2.0],[1,1])
 
 plt.xlabel("1/h")
-plt.ylabel("normalised error")
+plt.ylabel("normalised stress error")
 plt.xscale("log")
 plt.yscale("log")
 #plt.tight_layout()

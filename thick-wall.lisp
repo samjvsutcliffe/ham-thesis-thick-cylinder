@@ -5,7 +5,8 @@
 (defun plot-domain ()
   (format t "~A ~%" (local-time:now)))
 (let ((threads (parse-integer (if (uiop:getenv "OMP_NUM_THREADS") (uiop:getenv "OMP_NUM_THREADS") "16"))))
-  (setf lparallel:*kernel* (lparallel:make-kernel threads :name "custom-kernel"))
+  ;(setf lparallel:*kernel* (lparallel:make-kernel threads :name "custom-kernel"))
+  (cl-mpm/utils:set-workers threads)
   (format t "Thread count ~D~%" threads))
 
 (defparameter *ref* (parse-float:parse-float (if (uiop:getenv "REFINE") (uiop:getenv "REFINE") "1")))
@@ -14,7 +15,7 @@
 
 (let ((stability-dir (merge-pathnames (format nil "./data/"))))
   (ensure-directories-exist stability-dir)
-  (let* ((mps 2)
+  (let* ((mps 4)
          (output-dir (merge-pathnames  (format nil "./output-~f-~f/" *ref* mps) *top-dir*)))
     (format t "Outputting to ~A~%" output-dir)
     (let* ()
@@ -31,10 +32,9 @@
        :load-steps 10
        :substeps (* 20 *ref*)
        :plotter #'plot
-       :damping 1d0
        :save-vtk-dr nil
        :save-vtk-loadstep t
-       :dt-scale 1d0
+       :dt-scale 0.9d0
        :criteria 1d-9
        :loading-function #'loading-function)
       (save-csv (merge-pathnames (format nil "./data/data-~A_~D.csv" *ref* mps)))
